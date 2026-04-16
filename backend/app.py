@@ -633,12 +633,16 @@ if __name__ == '__main__':
     
     # Run server
     app.run(host='0.0.0.0', port=8080, debug=True)
-else:
-    # Vercel Runtime: Initialize DB on import
-    # This ensures tables are created in Supabase automatically
-    with app.app_context():
+
+# Vercel / Production: Lazy initialization on first request
+_initialized = False
+@app.before_request
+def first_request_init():
+    global _initialized
+    if not _initialized:
         try:
-            init_db()
-            print('Vercel: DB initialization completed.')
+            with app.app_context():
+                init_db()
+            _initialized = True
         except Exception as e:
-            print(f'Vercel: DB initialization failed: {e}')
+            app.logger.error(f"Lazy Init Failed: {e}")
