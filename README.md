@@ -1,53 +1,48 @@
-# 🍴 ForkFeed — Premium Food Ordering Platform
+# 🍽️ ForkFeed — The Ultimate Food Ordering Platform
 
-ForkFeed is a modern, full-stack food ordering application designed for seamless restaurant management and user experience. With a sleek dark-mode aesthetic and real-time status tracking, it bridges the gap between hungry customers and efficient kitchen operations.
+ForkFeed is a premium, real-time food ordering and management system designed for a seamless gourmet experience. Built with a powerful Flask backend and a modern, high-performance vanilla JS frontend, ForkFeed offers a sleek dark-themed interface with vibrant accents and glassmorphism design elements.
 
----
+![Home Page](project_images/3.png)
 
-## ✨ Key Features
+## 🌟 Key Features
 
-### 👨‍💼 Admin Dashboard
-- **Real-Time Order Management**: Track pending, accepted, preparing, and ready orders with instant status updates.
-- **Menu Management**: Dynamic control over food categories and items. Toggle availability, edit prices, or add new delicacies on the fly.
-- **Revenue Analytics**: View total sales and order statistics at a glance.
-- **Session Isolation**: Secure admin-only access with tab-level session independence.
+### 👤 Customer Experience
+- **Elegant UI**: Modern dark-mode aesthetic with smooth animations and responsive layouts.
+- **Dynamic Menu**: Real-time menu updates with category filtering and smart search.
+- **Persistent Cart**: Isolated tab sessions using `sessionStorage` for independent multi-account testing.
+- **Order Tracking**: Detailed order history with live status updates (Pending, Accepted, Preparing, Ready, Completed).
+- **Secure Authentication**: JWT-based authentication with automatic session management.
 
-### 🍱 User Experience
-- **Interactive Menu**: Explore a wide range of categories with beautiful visuals.
-- **Smart Cart**: Add items, adjust quantities, and manage your "plate" before checkout.
-- **Order Tracking**: Real-time status badges (Pending → Accepted → Preparing → Ready → Completed).
-- **Profile Management**: View personal details and summarize your order history.
-
----
+### 🛠️ Admin Dashboard
+- **Live Order Management**: Real-time status updates for incoming orders with instant UI synchronization.
+- **Menu & Category Control**: Easy-to-use forms for adding/editing food items and categories.
+- **Availability Toggles**: Instantly hide/show items or entire categories from the customer menu.
+- **Revenue Analytics**: Visual stats for total orders, pending tasks, and global revenue.
 
 ## 📸 Screenshots
 
-<div align="center">
-  <img src="project_images/1.png" width="400" />
-  <img src="project_images/2.png" width="400" />
-  <br/>
-  <img src="project_images/3.png" width="400" />
-  <img src="project_images/4.png" width="400" />
-  <br/>
-  <img src="project_images/5.png" width="400" />
-  <img src="project_images/6.png" width="400" />
-  <br/>
-  <img src="project_images/7.png" width="400" />
-</div>
+### Customer View
+| Home Page | Menu Page |
+|-----------|-----------|
+| ![Home](project_images/4.png) | ![Menu](project_images/5.png) |
 
----
+| User Orders | About Us |
+|-----------|-----------|
+| ![Orders](project_images/6.png) | ![About](project_images/7.png) |
 
-## 🛠️ Technology Stack
+### Admin Dashboard
+| Orders Management | Menu Control |
+|-----------|-----------|
+| ![Admin Orders](project_images/1.png) | ![Admin Menu](project_images/2.png) |
 
-- **Frontend**: Vanilla JS (ES6+), HTML5, CSS3.
-- **Backend**: Python, Flask, SQLAlchemy.
-- **Authentication**: JWT (JSON Web Tokens) with tab-level session isolation.
-- **Database**: SQLite (Production-ready migration supported).
-- **Styling**: Google Fonts (Inter), FontAwesome 6, Modern Glassmorphism.
+## 🚀 Technology Stack
 
----
+- **Backend**: Flask (Python) with SQLAlchemy (SQLite)
+- **Frontend**: Vanilla JavaScript (ES6+ Modules), HTML5, CSS3
+- **Security**: Flask-JWT-Extended for token-based authentication, Bcrypt for password hashing
+- **Styling**: Modern CSS with CSS Variables, Flexbox, and CSS Grid
 
-## 🚀 Getting Started
+## 📦 Getting Started
 
 ### Prerequisites
 - Python 3.8+
@@ -66,20 +61,20 @@ ForkFeed is a modern, full-stack food ordering application designed for seamless
    pip install -r backend/requirements.txt
    ```
 
-3. **Run the server**:
+3. **Run the application**:
    ```bash
    python backend/app.py
    ```
 
-4. **Access the application**:
-   - Website: [http://localhost:8080](http://localhost:8080)
-   - Admin Login: Refer to the code
+4. **Access the platform**:
+   - Open your browser and go to `http://localhost:8080`
+   - **Admin Account**: `admin` / `admin123`
+   - **User Account**: Create a new account via the Signup page.
+
+## 🛡️ Security Features
+- **Session Isolation**: Utilizes `sessionStorage` for cross-account testing in separate tabs.
+- **JWT Protection**: All sensitive API endpoints are protected by JSON Web Tokens.
+- **CORS Enabled**: Configured for secure resource sharing.
 
 ---
-
-## 📖 License
-This project is for educational and portfolio demonstration purposes.
-
----
-
-<p align="center">Made with ❤️ for Great Food Experiences</p>
+Built with ❤️ by [Kevin Vinu](https://github.com/KevinVinu)

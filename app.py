@@ -1,7 +1,7 @@
-import os
-import json
-import bcrypt
-from datetime import datetime, timedelta
+"""
+ForkFeed — Flask Backend (Supabase/Vercel Production Version)
+"""
+
 from flask import Flask, request, jsonify, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import (
@@ -9,27 +9,65 @@ from flask_jwt_extended import (
     jwt_required, get_jwt_identity, get_jwt
 )
 from flask_cors import CORS
+import bcrypt
+from datetime import datetime, timedelta
+import json
+import os
 
 # ─────────────────────────────────────────────────────────────────────────────
 # App & Config
 # ─────────────────────────────────────────────────────────────────────────────
+# Root directory is now the same as this file (index.py)
 root_dir = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__, static_folder=root_dir, static_url_path='')
 
-# Auth Configuration
-app.config['JWT_SECRET_KEY'] = 'FoodSQuare-Secret-Key-2024'
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# Database Configuration (Supabase / Postgres)
+# Database Configuration
 database_url = os.environ.get('DATABASE_URL')
 if database_url and database_url.startswith("postgres://"):
     database_url = database_url.replace("postgres://", "postgresql://", 1)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url or f'sqlite:///{os.path.join(root_dir, "foodsquare.db")}'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['JWT_SECRET_KEY'] = 'FoodSQuare-Secret-Key-2024'
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
 
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
 CORS(app, resources={r"/*": {"origins": "*"}})
+
+# ─────────────────────────────────────────────────────────────────────────────
+# JWT Error Handlers
+# ─────────────────────────────────────────────────────────────────────────────
+
+@jwt.expired_token_loader
+def expired_token_callback(jwt_header, jwt_payload):
+    return jsonify({'error': 'TOKEN_EXPIRED', 'message': 'Session expired.'}), 401
+
+@jwt.invalid_token_loader
+def invalid_token_callback(error_string):
+    return jsonify({'error': 'INVALID_TOKEN', 'message': 'Invalid token.'}), 401
+
+@jwt.unauthorized_loader
+def missing_token_callback(error_string):
+    return jsonify({'error': 'MISSING_TOKEN', 'message': 'Auth required.'}), 401
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Static File Routes
+# ─────────────────────────────────────────────────────────────────────────────
+
+@app.route('/')
+def index():
+    try:
+        return send_from_directory(app.static_folder, 'home.html')
+    except:
+        return "Frontend is loading... if this persists, check home.html"
+
+@app.errorhandler(404)
+def not_found(e):
+    path = request.path.lstrip('/')
+    if os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    return jsonify({'error': 'Not found'}), 404
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Models
@@ -50,18 +88,28 @@ class User(db.Model):
 
     def set_password(self, raw):
         self.password = bcrypt.hashpw(raw.encode(), bcrypt.gensalt()).decode()
+
     def check_password(self, raw):
-        try: return bcrypt.checkpw(raw.encode(), self.password.encode())
-        except: return raw == self.password
+        try:
+            return bcrypt.checkpw(raw.encode(), self.password.encode())
+        except Exception:
+            return raw == self.password
+
     def get_roles(self):
         try: return json.loads(self.roles)
-        except: return ["ROLE_USER"]
+        except Exception: return ["ROLE_USER"]
+
     def to_dict(self):
         return {
-            'id': self.id, 'userName': self.user_name, 'firstName': self.first_name,
-            'lastName': self.last_name, 'email': self.email, 'phone': self.phone,
-            'regNum': self.reg_num, 'createAt': self.create_at.isoformat() if self.create_at else None,
-            'roles': self.get_roles()
+            'id':        self.id,
+            'userName':  self.user_name,
+            'firstName': self.first_name,
+            'lastName':  self.last_name,
+            'email':     self.email,
+            'phone':     self.phone,
+            'regNum':    self.reg_num,
+            'createAt':  self.create_at.isoformat() if self.create_at else None,
+            'roles':     self.get_roles()
         }
 
 class Food(db.Model):
@@ -73,8 +121,10 @@ class Food(db.Model):
 
     def to_dict(self):
         return {
-            'id': self.id, 'foodName': self.food_name, 'isAvailable': self.is_available,
-            'foodSubCat': [s.to_dict() for s in self.food_sub_cat]
+            'id':          self.id,
+            'foodName':    self.food_name,
+            'isAvailable': self.is_available,
+            'foodSubCat':  [s.to_dict() for s in self.food_sub_cat]
         }
 
 class FoodSubCat(db.Model):
@@ -90,9 +140,14 @@ class FoodSubCat(db.Model):
 
     def to_dict(self):
         return {
-            'id': self.id, 'foodName': self.food_name, 'description': self.description,
-            'price': self.price, 'imgUrl': self.img_url, 'isAvailable': self.is_available,
-            'vegOrNonVeg': self.veg_or_non_veg, 'foodId': self.food_id
+            'id':          self.id,
+            'foodName':    self.food_name,
+            'description': self.description,
+            'price':       self.price,
+            'imgUrl':      self.img_url,
+            'isAvailable': self.is_available,
+            'vegOrNonVeg': self.veg_or_non_veg,
+            'foodId':      self.food_id
         }
 
 class Orders(db.Model):
@@ -109,10 +164,13 @@ class Orders(db.Model):
         status = 'PENDING'
         if self.items: status = self.items[0].status
         return {
-            'id': self.id, 'paymentStatus': self.payment_status,
-            'orderTime': self.local_date_time.isoformat() if self.local_date_time else None,
-            'totalPrice': self.total, 'userName': self.user.user_name if self.user else None,
-            'orderStatus': status, 'orderItems': [i.to_dict() for i in self.items]
+            'id':            self.id,
+            'paymentStatus': self.payment_status,
+            'orderTime':     self.local_date_time.isoformat() if self.local_date_time else None,
+            'totalPrice':    self.total,
+            'userName':      self.user.user_name if self.user else None,
+            'orderStatus':   status,
+            'orderItems':    [i.to_dict() for i in self.items]
         }
 
 class OrderItem(db.Model):
@@ -128,18 +186,25 @@ class OrderItem(db.Model):
     def to_dict(self):
         fsc = self.food_sub_cat
         return {
-            'id': self.id, 'quantity': self.quantity, 'price': fsc.price if fsc else 0,
-            'foodName': fsc.food_name if fsc else 'Unknown', 'totalPrice': self.total_price, 'status': self.status
+            'id':        self.id,
+            'quantity':  self.quantity,
+            'price':     fsc.price if fsc else 0,
+            'foodName':  fsc.food_name if fsc else 'Unknown',
+            'totalPrice': self.total_price,
+            'status':    self.status
         }
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Auth Helpers
+# Auth Decorator Helpers
 # ─────────────────────────────────────────────────────────────────────────────
 def is_admin():
-    identity = get_jwt_identity()
-    if identity == 'admin': return True
-    claims = get_jwt()
-    return 'ROLE_ADMIN' in claims.get('roles', [])
+    try:
+        identity = get_jwt_identity()
+        if not identity: return False
+        if identity == 'admin': return True
+        claims = get_jwt()
+        return 'ROLE_ADMIN' in claims.get('roles', [])
+    except Exception: return False
 
 def require_admin():
     if not is_admin():
@@ -147,165 +212,113 @@ def require_admin():
     return None
 
 # ─────────────────────────────────────────────────────────────────────────────
-# CORE API ROUTES
+# API ROUTES
 # ─────────────────────────────────────────────────────────────────────────────
-
-@app.route('/')
-def site_index():
-    try: return send_from_directory(app.static_folder, 'home.html')
-    except: return "FoodSquare Backend Online. <a href='/login.html'>Go to Login</a>"
 
 @app.route('/public/login', methods=['POST'])
 def login():
     data = request.get_json()
+    if not data: return 'Invalid JSON', 400
     username = data.get('userName', '').strip()
     password = data.get('password', '')
     user = User.query.filter_by(user_name=username).first()
     if not user or not user.check_password(password):
-        return jsonify({'message': 'Invalid credentials'}), 401
+        return 'Invalid creds', 401
     token = create_access_token(identity=username, additional_claims={'roles': user.get_roles()})
     return token, 200
 
+@app.route('/api/auth/verify', methods=['GET'])
+@jwt_required()
+def verify_token():
+    identity = get_jwt_identity()
+    user = User.query.filter_by(user_name=identity).first()
+    if not user: return jsonify({'valid': False}), 401
+    return jsonify({'valid': True, 'userName': user.user_name, 'roles': user.get_roles()}), 200
+
 @app.route('/public/signUp', methods=['POST'])
-def signup():
+def sign_up():
     data = request.get_json()
     try:
         if User.query.filter_by(user_name=data.get('userName')).first(): return 'Taken', 400
-        user = User(user_name=data['userName'], email=data['email'], first_name=data.get('firstName', ''), last_name=data.get('lastName', ''), phone=data.get('phone', ''), reg_num=data.get('regNum'), create_at=datetime.now())
+        user = User()
+        user.user_name = data['userName']
+        user.email = data['email']
+        user.first_name = data.get('firstName', '')
+        user.create_at = datetime.now()
         user.set_password(data['password'])
         db.session.add(user)
         db.session.commit()
         return "Saved", 200
     except Exception as e: return str(e), 400
 
-@app.route('/api/auth/verify', methods=['GET'])
-@jwt_required()
-def verify():
-    user = User.query.filter_by(user_name=get_jwt_identity()).first()
-    return jsonify({'valid': True, 'userName': user.user_name, 'roles': user.get_roles()}), 200
-
-@app.route('/api/users/<username>', methods=['GET'])
-@jwt_required()
-def get_user_profile(username):
-    user = User.query.filter_by(user_name=username).first()
-    return jsonify(user.to_dict()), 200
-
-# ─────────────────────────────────────────────────────────────────────────────
-# FOOD & MENU
-# ─────────────────────────────────────────────────────────────────────────────
-
 @app.route('/Food/food', methods=['GET'])
-def get_menu():
-    return jsonify([f.to_dict() for f in Food.query.all()]), 200
-
-@app.route('/Food/food', methods=['POST'])
-@jwt_required()
-def add_category():
-    err = require_admin(); if err: return err
-    data = request.get_json()
-    f = Food(food_name=data['foodName'], is_available=True)
-    db.session.add(f); db.session.commit()
-    return "Added", 200
+def get_all_food():
+    foods = Food.query.all()
+    return jsonify([f.to_dict() for f in foods]), 200
 
 @app.route('/Food/subfood', methods=['POST'])
 @jwt_required()
-def add_item():
+def add_sub_food():
     err = require_admin(); if err: return err
     data = request.get_json()
-    f_id = data.get('foodId') or data.get('food', {}).get('id')
-    sc = FoodSubCat(food_name=data['foodName'], description=data.get('description', ''), price=float(data['price']), img_url=data.get('imgUrl', ''), is_available=True, veg_or_non_veg=data.get('vegOrNonVeg', 'Veg'), food_id=f_id)
-    db.session.add(sc); db.session.commit()
-    return "Added", 200
-
-@app.route('/Food/id/<int:id>/<flag>', methods=['PATCH'])
-@jwt_required()
-def toggle_cat(id, flag):
-    err = require_admin(); if err: return err
-    f = Food.query.get(id); f.is_available = flag.lower() == 'true'
-    db.session.commit(); return jsonify(f.to_dict()), 200
-
-@app.route('/Food/subfood/id/<int:id>/<flag>', methods=['PATCH'])
-@jwt_required()
-def toggle_item(id, flag):
-    err = require_admin(); if err: return err
-    s = FoodSubCat.query.get(id); s.is_available = flag.lower() == 'true'
-    db.session.commit(); return jsonify(s.to_dict()), 200
-
-@app.route('/Food/subfood/id/<int:id>', methods=['PUT'])
-@jwt_required()
-def update_item_full(id):
-    err = require_admin(); if err: return err
-    s = FoodSubCat.query.get(id); data = request.get_json()
-    if 'foodName' in data: s.food_name = data['foodName']
-    if 'price' in data: s.price = float(data['price'])
-    db.session.commit(); return jsonify(s.to_dict()), 200
-
-# ─────────────────────────────────────────────────────────────────────────────
-# ORDERS
-# ─────────────────────────────────────────────────────────────────────────────
-
-@app.route('/Order', methods=['POST'])
-@jwt_required()
-def make_order():
-    user = User.query.filter_by(user_name=get_jwt_identity()).first()
-    data = request.get_json()
-    o = Orders(user_id=user.id, local_date_time=datetime.now(), total=float(data.get('totalPrice', 0)))
-    db.session.add(o); db.session.flush()
-    for item in data.get('orderItems', []):
-        oi = OrderItem(quantity=item['quantity'], total_price=float(item['price'])*int(item['quantity']), status='PENDING', order_id=o.id, food_id=item['foodId'])
-        db.session.add(oi)
-    db.session.commit()
-    return jsonify(o.to_dict()), 200
+    try:
+        sub = FoodSubCat()
+        sub.food_name = data['foodName']
+        sub.price = float(data['price'])
+        sub.food_id = data.get('foodId') or data.get('food', {}).get('id')
+        db.session.add(sub)
+        db.session.commit()
+        return "Added", 200
+    except: return 'Error', 400
 
 @app.route('/Order/getUserAll', methods=['GET'])
 @jwt_required()
-def user_orders():
-    user = User.query.filter_by(user_name=get_jwt_identity()).first()
-    return jsonify([o.to_dict() for o in Orders.query.filter_by(user_id=user.id).order_by(Orders.id.desc()).all()]), 200
+def get_user_orders():
+    identity = get_jwt_identity()
+    user = User.query.filter_by(user_name=identity).first()
+    orders = Orders.query.filter_by(user_id=user.id).order_by(Orders.id.desc()).all()
+    return jsonify([o.to_dict() for o in orders]), 200
 
 @app.route('/Order/getAll', methods=['GET'])
 @jwt_required()
-def admin_orders():
+def get_all_orders():
     err = require_admin(); if err: return err
-    return jsonify([o.to_dict() for o in Orders.query.order_by(Orders.id.desc()).all()]), 200
+    orders = Orders.query.order_by(Orders.id.desc()).all()
+    return jsonify([o.to_dict() for o in orders]), 200
 
-@app.route('/Order/id/<int:id>/<status>', methods=['PATCH'])
+@app.route('/Order/id/<int:order_id>/<status>', methods=['PATCH'])
 @jwt_required()
-def update_order(id, status):
+def update_order_status(order_id, status):
     err = require_admin(); if err: return err
-    o = Orders.query.get(id)
-    for i in o.items: i.status = status.upper()
-    db.session.commit(); return jsonify(o.to_dict()), 200
+    order = Orders.query.get(order_id)
+    for item in order.items: item.status = status.upper()
+    db.session.commit()
+    return jsonify(order.to_dict()), 200
 
 # ─────────────────────────────────────────────────────────────────────────────
-# STATIC HANDLER (for non-API paths)
+# DB Init & Seed
 # ─────────────────────────────────────────────────────────────────────────────
-@app.errorhandler(404)
-def static_proxy(e):
-    path = request.path.lstrip('/')
-    if os.path.exists(os.path.join(app.static_folder, path)):
-        return send_from_directory(app.static_folder, path)
-    return jsonify({'error': 'Not found'}), 404
 
-# ─────────────────────────────────────────────────────────────────────────────
-# DB SETUP
-# ─────────────────────────────────────────────────────────────────────────────
 def init_db():
     db.create_all()
     if not User.query.filter_by(user_name='admin').first():
         admin = User(user_name='admin', first_name='Admin', email='admin@fs.com', roles='["ROLE_USER", "ROLE_ADMIN"]')
-        admin.set_password('admin123'); admin.create_at = datetime.now()
-        db.session.add(admin); db.session.commit()
+        admin.set_password('admin123')
+        admin.create_at = datetime.now()
+        db.session.add(admin)
+    db.session.commit()
 
-_init = False
+# Vercel Runtime: Lazy initialization
+_initialized = False
 @app.before_request
-def setup():
-    global _init
-    if not _init:
+def first_request_init():
+    global _initialized
+    if not _initialized:
         try:
             with app.app_context(): init_db()
-            _init = True
-        except Exception as e: app.logger.error(f"DB Error: {e}")
+            _initialized = True
+        except Exception as e:
+            app.logger.error(f"DB Init Error: {e}")
 
 if __name__ == '__main__':
     with app.app_context(): init_db()

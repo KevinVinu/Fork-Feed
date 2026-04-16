@@ -1,14 +1,12 @@
-# Python
 __pycache__/
 *.py[cod]
 *$py.class
-venv/
-env/
-.env
-
-# Database
 backend/foodsquare.db
-
-# OS
+.venv/
+venv/
+ENV/
+.env
+.vscode/
+.idea/
 .DS_Store
-Thumbs.db
+node_modules/
