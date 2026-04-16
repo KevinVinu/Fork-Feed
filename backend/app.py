@@ -26,11 +26,20 @@ import os
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 app = Flask(__name__, static_folder=root_dir, static_url_path='')
 
-# Use SQLite for better portability and easy debugging
-basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(basedir, "foodsquare.db")}'
+# Database configuration: Use DATABASE_URL from env if available (Production), 
+# otherwise fallback to local SQLite (Development).
+database_url = os.environ.get('DATABASE_URL')
+if database_url:
+    # SQL-Alchemy 1.4+ requires 'postgresql://' but some providers still use 'postgres://'
+    if database_url.startswith("postgres://"):
+        database_url = database_url.replace("postgres://", "postgresql://", 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+else:
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(basedir, "foodsquare.db")}'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['JWT_SECRET_KEY'] = 'FoodSQuare-Secret-Key-2024'
+app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'FoodSQuare-Secret-Key-2024')
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
 
 db = SQLAlchemy(app)
