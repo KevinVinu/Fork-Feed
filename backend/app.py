@@ -586,11 +586,8 @@ def update_order_status(order_id, status):
 # ─────────────────────────────────────────────────────────────────────────────
 
 def init_db():
-    # Only init if file doesn't exist
-    db_file = os.path.join(basedir, "foodsquare.db")
-    if not os.path.exists(db_file):
-        db.create_all()
-        print('Database created.')
+    db.create_all()
+    print('Database schema verified.')
         
         # Seed admin
         if not User.query.filter_by(user_name='admin').first():
@@ -626,7 +623,7 @@ def init_db():
         print('Initial data seeded.')
 
 if __name__ == '__main__':
-    # Ensure database is current
+    # Ensure database is current (Local Run)
     with app.app_context():
         init_db()
     
@@ -636,3 +633,12 @@ if __name__ == '__main__':
     
     # Run server
     app.run(host='0.0.0.0', port=8080, debug=True)
+else:
+    # Vercel Runtime: Initialize DB on import
+    # This ensures tables are created in Supabase automatically
+    with app.app_context():
+        try:
+            init_db()
+            print('Vercel: DB initialization completed.')
+        except Exception as e:
+            print(f'Vercel: DB initialization failed: {e}')
