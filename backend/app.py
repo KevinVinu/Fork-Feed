@@ -27,8 +27,15 @@ root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 app = Flask(__name__, static_folder=root_dir, static_url_path='')
 
 # Use SQLite for better portability and easy debugging
+# Database Configuration
+# Priority: ENV Variable (for Supabase/Production) > Local SQLite
+database_url = os.environ.get('DATABASE_URL')
+if database_url and database_url.startswith("postgres://"):
+    # Fix for SQLAlchemy 1.4+ which requires "postgresql://" instead of "postgres://"
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(basedir, "foodsquare.db")}'
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url or f'sqlite:///{os.path.join(basedir, "foodsquare.db")}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = 'FoodSQuare-Secret-Key-2024'
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
