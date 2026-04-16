@@ -73,7 +73,7 @@ ForkFeed is a modern, full-stack food ordering application designed for seamless
 
 4. **Access the application**:
    - Website: [http://localhost:8080](http://localhost:8080)
-   - Admin Login: `admin` / `admin123`
+   - Admin Login: Refer to the code
 
 ---
 
