@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu | ForkFeed</title>
+    <link rel="stylesheet" href="menu.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body class="menu-page">
+    <div class="grid-background"></div>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo">Fork<span>Feed</span></div>
+            <ul class="nav-links">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="menu.html" class="active">Menu</a></li>
+                <li><a href="orders.html">Orders</a></li>
+                <li><a href="about.html">About us</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="cart-icon" onclick="window.location.href='cart.html'" style="cursor:pointer">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span class="cart-count">0</span>
+                </div>
+                <button class="btn-signup" id="nav-auth-btn" onclick="window.location.href='signup.html'">Sign Up</button>
+                <button class="btn-signup" id="nav-logout-btn" style="display: none; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">Logout</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-wrapper">
+        <div class="menu-layout">
+            <!-- LEFT SIDEBAR: CATEGORIES -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <h3>Categories</h3>
+                    <a href="#" class="see-more">SEE MORE</a>
+                </div>
+
+                <div class="category-list" id="category-list">
+                    <!-- Categories will be loaded dynamically -->
+                </div>
+            </aside>
+
+            <!-- RIGHT CONTENT: GRID -->
+            <section class="menu-main">
+                <div class="menu-top-bar">
+                    <div class="title-box">
+                        <h2 id="menu-title">All Items</h2>
+                        <p id="menu-count">Found 0 delicacies</p>
+                    </div>
+                    <div class="search-container">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Search dishes...">
+                    </div>
+                </div>
+
+                <div class="food-grid" id="menu-food-grid">
+                    <!-- Items will be loaded dynamically -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script type="module" src="./js/cart.js"></script>
+    <script type="module" src="./js/menu.js"></script>
+</body>
+
+</html>

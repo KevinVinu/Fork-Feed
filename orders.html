@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders | ForkFeed</title>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="orders.css">
+</head>
+
+<body>
+    <div class="grid-background"></div>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo">Fork<span>Feed</span></div>
+            <ul class="nav-links">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="orders.html" class="active">Orders</a></li>
+                <li><a href="about.html">About us</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="cart-icon" onclick="window.location.href='cart.html'" style="cursor:pointer">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span class="cart-count">0</span>
+                </div>
+                <button class="btn-signup" id="nav-auth-btn" onclick="window.location.href='signup.html'">Sign Up</button>
+                <button class="btn-signup" id="nav-logout-btn" style="display: none; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">Logout</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="orders-container">
+        <div class="orders-header">
+            <h1>Recent <span class="text-pink">Orders</span></h1>
+            <p>Track and manage your delicious journeys.</p>
+        </div>
+
+        <div class="orders-list">
+            <!-- Orders injected dynamically via orders.js -->
+            <p style="text-align: center; color: var(--text-gray); padding: 50px;">Loading your delicious history...</p>
+        </div>
+
+    </main>
+    <script type="module" src="./js/cart.js"></script>
+    <script type="module" src="./js/orders.js"></script>
+</body>
+
+</html>

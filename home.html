@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ForkFeed | The Ultimate Food Destination</title>
+    <link rel="stylesheet" href="home.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="grid-background"></div>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo">Fork<span>Feed</span></div>
+            <ul class="nav-links">
+                <li><a href="home.html" class="active">Home</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="orders.html">Orders</a></li>
+                <li><a href="about.html">About us</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="cart-icon" onclick="window.location.href='cart.html'" style="cursor:pointer">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span class="cart-count">0</span>
+                </div>
+                <button class="btn-signup" id="nav-auth-btn" onclick="window.location.href='signup.html'">Sign Up</button>
+                <button class="btn-signup" id="nav-logout-btn" style="display: none; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">Logout</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-wrapper">
+        <!-- HERO SECTION -->
+        <section class="hero">
+            <div class="hero-content">
+                <span class="badge-top">THE ULTIMATE FOOD DESTINATION</span>
+                <h1>All Best <br> Recipes <br> <span class="text-pink">In One Place</span></h1>
+                <p>Experience gourmet dining delivered to your doorstep. From authentic Biryani to artisanal Pizza, we
+                    have everything you crave.</p>
+
+                <div class="hero-btns">
+                    <button class="btn-primary" onclick="window.location.href='menu.html'">Order Now <i class="fa-solid fa-chevron-right"></i></button>
+                    <button class="btn-secondary" onclick="window.location.href='menu.html'">Explore Menu</button>
+                </div>
+
+                <div class="social-proof">
+                    <div class="avatars">
+
+                    </div>
+                    <div class="rating">
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-image-container">
+                <div class="main-food-circle">
+                    <!-- Replace with your exact image path -->
+                    <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1000&auto=format&fit=crop"
+                        alt="Healthy Bowl" id="heroFoodImg">
+                </div>
+
+            </div>
+        </section>
+
+        <!-- POPULAR SPECIALTIES -->
+        <section class="specialties">
+            <div class="section-header">
+                <div>
+                    <span class="sub-title">CUSTOMER CHOICE</span>
+                    <h2>Popular Specialties</h2>
+                </div>
+                <button class="btn-view-all">VIEW FULL MENU</button>
+            </div>
+
+            <div class="food-grid" id="popular-grid">
+                <!-- Data will be loaded dynamically -->
+            </div>
+        </section>
+
+        <!-- INFO STRIP -->
+        <section class="info-strip">
+            <div class="info-box">
+                <i class="fa-regular fa-clock"></i>
+                <div>
+                    <h4>OPENING HOURS</h4>
+                    <p>Mon - Sun: 10:00 AM - 10:00 PM</p>
+                </div>
+            </div>
+            <div class="info-box">
+                <i class="fa-solid fa-location-dot"></i>
+                <div>
+                    <h4>OUR LOCATION</h4>
+                    <p>Lovely Professional University</p>
+                </div>
+            </div>
+            <div class="info-box">
+                <i class="fa-solid fa-phone"></i>
+                <div>
+                    <h4>PHONE SUPPORT</h4>
+                    <p>+91 00000 00000</p>
+                </div>
+            </div>
+            <div class="info-box">
+                <i class="fa-regular fa-envelope"></i>
+                <div>
+                    <h4>EMAIL US</h4>
+                    <p>admin@foodsquare.com</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA SECTION -->
+        <section class="cta">
+            <div class="cta-card">
+                <h2>Ready to taste the magic?</h2>
+                <p>Join our community of food lovers and get exclusive access to seasonal items and special discounts.
+                </p>
+                <button class="btn-join">Join the Experience</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="logo">Fork<span>Feed</span></div>
+
+            <p>© ForkFeed. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script type="module" src="./js/cart.js"></script>
+    <script type="module" src="home.js"></script>
+</body>
+
+</html>

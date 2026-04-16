@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | ForkFeed</title>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="about.css">
+</head>
+<body>
+    <div class="grid-background"></div>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo">Fork<span>Feed</span></div>
+            <ul class="nav-links">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="orders.html">Orders</a></li>
+                <li><a href="about.html" class="active">About us</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="cart-icon">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span class="cart-count">0</span>
+                </div>
+                <button class="btn-signup" id="nav-auth-btn" onclick="window.location.href='signup.html'">Sign Up</button>
+                <button class="btn-signup" id="nav-logout-btn" style="display: none; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">Logout</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="about-container">
+        <!-- Hero Section -->
+        <section class="about-hero">
+            <div class="hero-content">
+                <span class="badge-top">OUR JOURNEY</span>
+                <h1>Serving Passion <br>On Every <span class="text-pink">Square Plate.</span></h1>
+                <p>Founded with a simple mission: to revolutionize how you experience food. ForkFeed webapp combines traditional flavors with modern booking convenience.</p>
+            </div>
+            <div class="about-stats">
+                <div class="stat-card">
+                    <h2 class="counter" data-target="15">0</h2>
+                    <p>Years Experience</p>
+                </div>
+                <div class="stat-card">
+                    <h2 class="counter" data-target="10">0</h2>
+                    <p>Expert Chefs</p>
+                </div>
+                <div class="stat-card">
+                    <h2 class="counter" data-target="120">0</h2>
+                    <p>Daily Dishes</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Content Section -->
+        <section class="about-info-grid">
+            <div class="info-image">
+                <div class="image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=800&q=80" alt="Our Kitchen">
+                    <div class="experience-badge">Est. 2025</div>
+                </div>
+            </div>
+            <div class="info-text">
+                <span class="sub-title">WHO WE ARE</span>
+                <h2>Crafting Memorable <br>Culinary Experiences</h2>
+                <p>At ForkFeed, we believe that dining is more than just eating; it's an art. From our hand-picked organic ingredients to our seamless online booking system, every detail is designed to give you a premium experience.</p>
+                
+                <div class="features-list">
+                    <div class="feature-item">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Good Food, Good Vibes</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>100% Organic & Fresh Ingredients</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Top-rated Hygiene Standards</span>
+                    </div>
+                </div>
+
+                <div class="hero-btns">
+                    <button class="btn-primary" onclick="window.location.href='menu.html'">Explore Menu <i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="about.js"></script>
+</body>
+</html>
