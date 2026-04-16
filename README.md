@@ -68,7 +68,7 @@ ForkFeed is a premium, real-time food ordering and management system designed fo
 
 4. **Access the platform**:
    - Open your browser and go to `http://localhost:8080`
-   - **Admin Account**: `admin` / `admin123`
+   - **Admin Account**: refer to the code
    - **User Account**: Create a new account via the Signup page.
 
 ## 🛡️ Security Features
